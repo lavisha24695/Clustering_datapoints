@@ -1,0 +1,203 @@
+function [ri,fscore,ari,nmi,purity,confusion_matrix] = compute_evaluation_measures(...
+    true_labels, ...
+    labels)
+
+		if isempty(labels)
+				ri = -1;
+				fscore = -1;
+				ari = -1;
+				nmi = -1;
+				purity = -1;
+				confusion_matrix = [];
+				return;
+		end
+
+    confusion_matrix = compute_confusion_matrix(true_labels,labels);
+    
+    [ri,fscore,tp,fp,tn,fn] = compute_rand_index(confusion_matrix,0.5);
+    ari = compute_adjusted_rand_index(confusion_matrix);
+    nmi = compute_normalized_mutual_information(confusion_matrix);
+    purity = compute_purity(confusion_matrix);
+    
+end
+
+function confusion_matrix = compute_confusion_matrix(true_labels, labels)
+
+    utrue = unique(true_labels);
+    ulab = unique(labels);
+
+    confusion_matrix = zeros(length(utrue),length(ulab));
+    
+    for j = 1:length(utrue)
+        lab_vals = labels(true_labels == utrue(j));
+        
+        unique_vals = unique(lab_vals);
+        
+        for k = 1:length(unique_vals)
+            idx = find(ulab == unique_vals(k));
+            confusion_matrix(j,idx) = sum(lab_vals == unique_vals(k));
+ 
+        end
+        
+    end
+
+end
+
+function [ri,fscore,tp,fp,tn,fn] = compute_rand_index(...
+    confusion_matrix,...
+    beta)
+      
+    tp = 0;
+    tn = 0;
+    fp = 0;
+    fn = 0;
+    
+    for i = 1:size(confusion_matrix,1)    
+        for j = 1:size(confusion_matrix,2)
+            
+            if confusion_matrix(i,j) > 1
+                tp = tp + nchoosek(confusion_matrix(i,j),2);
+            end
+            
+        end
+    end
+    
+    for j = 1:size(confusion_matrix,2)
+        
+				if length(confusion_matrix(:,j)) <= 1
+						continue;
+				end
+				
+				z = nchoosek(confusion_matrix(:,j),2);
+        z = sum(z(:,1).*z(:,2));
+        
+        fp = fp + z;
+    end
+    
+    for i = 1:size(confusion_matrix,1)
+        if length(confusion_matrix(i,:)) <= 1
+						continue;
+				end
+				
+				z = nchoosek(confusion_matrix(i,:),2);
+        z = sum(z(:,1).*z(:,2));
+        
+        fn = fn + z;
+    end
+    
+    
+    for i = 1:size(confusion_matrix,1)
+        for j = 1:size(confusion_matrix,2)
+        
+            z = repmat(confusion_matrix(i,j),size(confusion_matrix,1), ...
+                size(confusion_matrix,2));
+            
+            z(i,:) = 0;
+            z(:,j) = 0;
+            
+            tot = z.*confusion_matrix;
+            tn = tn + sum(sum(tot))/2;
+        
+        end
+    end
+    
+    assert(nchoosek(sum(sum(confusion_matrix)),2) - tp -fp -tn -fn == 0);
+    
+    ri = (tp + tn)/(tp + tn + fn + fp);
+    
+    r = tp/(tp+fn);
+    p = tp/(tp+fp);
+    
+    fscore = (1 + beta^2) * p * r/(beta^2*p + r);
+    
+    
+end
+
+function ari = compute_adjusted_rand_index(confusion_matrix)
+
+    a_is = sum(confusion_matrix,2);
+    b_is = sum(confusion_matrix,1);
+    
+    tp = 0;
+    
+    for i = 1:size(confusion_matrix,1)    
+        for j = 1:size(confusion_matrix,2)
+            if confusion_matrix(i,j) > 1
+                tp = tp + nchoosek(confusion_matrix(i,j),2);
+            end
+        end
+    end
+    
+    ac2 = zeros(length(a_is),1);
+    bc2 = zeros(length(b_is),1);
+    
+    for i = 1:length(a_is)
+        
+        if a_is(i) > 1
+            ac2(i) = nchoosek(a_is(i),2);
+        else
+            ac2(i) = 0;
+        end
+    end
+    
+    for j = 1:length(b_is)
+        if b_is(j) > 1
+            bc2(j) = nchoosek(b_is(j),2);
+        else
+            bc2(j) = 0;
+        end
+    end
+
+    adj = (sum(ac2)*sum(bc2))/nchoosek(sum(sum(confusion_matrix)),2);
+    num = tp - adj;
+    
+    den = (0.5 * (sum(ac2) + sum(bc2))) - adj;
+    
+    ari = num/den;
+    
+end
+
+function nmi = compute_normalized_mutual_information(confusion_matrix)
+
+    confusion_matrix = confusion_matrix/sum(sum(confusion_matrix));
+
+    c_is = sum(confusion_matrix,2);
+    w_js = sum(confusion_matrix,1);
+    
+    info = 0;
+    
+    for i = 1:size(confusion_matrix,1)
+        for j = 1:size(confusion_matrix,2)
+            if confusion_matrix(i,j) > 0 && c_is(i) > 0 && w_js(j) > 0
+                info = info + confusion_matrix(i,j) * ...
+                    log(confusion_matrix(i,j)/(c_is(i)*w_js(j)));
+            end
+        end
+    end
+    
+    hc = 0;
+    
+    for i = 1:size(confusion_matrix,1)
+        hc = hc - c_is(i)*log(c_is(i));
+    end
+    
+    hw = 0;
+    
+    for j = 1:size(confusion_matrix,2)
+        hw = hw - w_js(j)*log(w_js(j));
+    end
+    
+    nmi = info*2/(hc+hw);
+
+end
+
+function purity = compute_purity(confusion_matrix)
+    purity = 0;
+    
+    for j = 1:size(confusion_matrix,2)
+        purity = purity + max(confusion_matrix(:,j));
+    end
+    
+    purity = purity/sum(sum(confusion_matrix));
+    
+end

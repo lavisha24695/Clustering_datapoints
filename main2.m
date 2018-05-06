@@ -96,13 +96,17 @@ data_rich(:,8) = pvals1;
 data_rich(:,9) = pvals2;
 data_rich(:,10) = pvals3;
 if d ==2
+    fprintf('Computing voronoi properties\n');
     [elongation, area, perimeter] = compute_voronoiprops(data);
     data_rich(:, 11) = elongation;
     data_rich(:, 12) = area;
     data_rich(:, 13) = perimeter;
     data_rich(:, 14) = compute_eccentricity(data);
-    %data_rich(:, 13) = compute_gmeasure(data);   
+    fprintf('Computing gabriel measure\n');
+    data_rich(:, 15) = compute_gabrielmeasure(data);   
 end
+fname = sprintf('rich%s.mat',filename);
+save(fname, 'data_rich');
 %{
 %Estimate intrinsic dimensions of point neighborhoods
 data_dimensions = estimate_dimensionality(data,data_neighbors,params);

@@ -7,9 +7,9 @@ addpath misc;
 addpath hierarchy;
 
 %filename = 'data_spiral.txt';
-filename = 'data_crescents.txt';
+%filename = 'data_crescents.txt';
 %filename = 'sample_data.txt';
-%filename = 'data_set_1_8_1_gaussian.txt';
+filename = 'data_set_1_8_1_gaussian.txt';
 % Example data set:
 data = load(filename);
 % isotropy_criterion: specify the criterion to use when computing shift

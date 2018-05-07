@@ -117,13 +117,27 @@ if d ==2
     data_rich(:, 15) = compute_gabrielmeasure(data);   
 end
 data_original = data;
-%Normalize
+%Normalize the data
 data = data_rich;
 for d = 1:1:number_properties
    data(:,d) = (data_rich(:,d) - min(data_rich(:,d)))/(max(data_rich(:,d))- min(data_rich(:,d)));
 end
 fname = sprintf('rich%s.mat',filename);
-save(fname, 'data_rich','data','data_original');
+save(fname,'data','data_original');
+%{
+%Code to save images of the respective plots
+name1 = {'Number of Neighbors' ,'Mean Distance', 'Std Deviation Distance', 'Shiftvector Magnitude', 'Density',...
+     '1st Derivative Density', '2nd Derivative Density', 'Isotropy Force Sum', 'Isotropy Force Sign', 'Isotropy Uniformity', 'Elongation',...
+     'Voronoi cell Area', 'Voronoi cell Perimeter', 'Eccentricity', 'Gabriel measure'};
+for i = 1:1:number_properties
+    f = figure;
+    scatter(data_original(:,1), data_original(:,2), 1, data(:,i))
+    colorbar
+    name2 = sprintf('%s.png',name1{i});
+    title(name1{i})
+    saveas(f, name2) 
+end
+%}
 %{
 %Estimate intrinsic dimensions of point neighborhoods
 data_dimensions = estimate_dimensionality(data,data_neighbors,params);

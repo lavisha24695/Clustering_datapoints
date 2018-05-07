@@ -6,7 +6,9 @@ function [data_neighbors, nbr_radius] = precompute_neighbors_fixedradius(data)
 fprintf('Computing fixed radius neighborhoods around point\n');
 [ndata, dimx] = size(data);
 [ncentres, dimc] = size(data);
-c = 0.1;
+%c = 0.1 worked best for main2
+%c = 0.5 might be working best for main3
+c = 0.5;
 n2 = (ones(ncentres, 1) * sum((data.^2)', 1))' + ...
   ones(ndata, 1) * sum((data.^2)',1) - ...
   2.*(data*(data'));

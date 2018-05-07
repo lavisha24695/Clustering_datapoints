@@ -8,7 +8,6 @@ function derivative = compute_derivate(weights, data, y, yhat, data_neighbors)
         for j = 1:1:N
             w(i,j) = exp(-1* sum(weights.*(data(i,:) - data(j,:)).*(data(i,:) - data(j,:))));
             w(j,i) = exp(-1* sum(weights.*(data(i,:) - data(j,:)).*(data(i,:) - data(j,:))));
-
         end
     end
    %Computing thetai
@@ -32,8 +31,7 @@ function derivative = compute_derivate(weights, data, y, yhat, data_neighbors)
        nbrs =data_neighbors{i};
        dEdyhat(i) = theta(i) - sum(yhat(nbrs).*w(i, nbrs));
    end
-   %Compute dwijdweightd
-  
+   
    %Compute dEdweightd
    dEdweightd = zeros(D,1);
    for d = 1:1:D

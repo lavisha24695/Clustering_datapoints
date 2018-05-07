@@ -16,9 +16,9 @@ addpath misc;
 addpath hierarchy;
 
 %filename = 'data_spiral.txt';
-%filename = 'data_crescents.txt';
+filename = 'data_crescents.txt';
 %filename = 'sample_data.txt';
-filename = 'data_set_1_8_1_gaussian.txt';
+%filename = 'data_set_1_8_1_gaussian.txt';
 % Example data set:
 data = load(filename);
 % isotropy_criterion: specify the criterion to use when computing shift
@@ -96,10 +96,12 @@ for i = 1:1:size(data,1)
    data_nbrs = data_neighbors{i};
    data_rich(i,6) = compute_fungradient(i, data, data_nbrs, data_rich(:,5));
 end
+
 for i = 1:1:size(data,1)
    data_nbrs = data_neighbors{i};
    data_rich(i,7) = compute_fungradient(i, data, data_nbrs, data_rich(:,6)); 
 end
+
 [pvals1, pvals2, pvals3] = isotropy_measures(data, win_size);
 data_rich(:,8) = pvals1;
 data_rich(:,9) = pvals2;
@@ -114,8 +116,14 @@ if d ==2
     fprintf('Computing gabriel measure\n');
     data_rich(:, 15) = compute_gabrielmeasure(data);   
 end
+data_original = data;
+%Normalize
+data = data_rich;
+for d = 1:1:number_properties
+   data(:,d) = (data_rich(:,d) - min(data_rich(:,d)))/(max(data_rich(:,d))- min(data_rich(:,d)));
+end
 fname = sprintf('rich%s.mat',filename);
-save(fname, 'data_rich');
+save(fname, 'data_rich','data','data_original');
 %{
 %Estimate intrinsic dimensions of point neighborhoods
 data_dimensions = estimate_dimensionality(data,data_neighbors,params);

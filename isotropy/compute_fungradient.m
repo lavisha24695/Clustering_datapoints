@@ -15,8 +15,14 @@ for j = 1:1:d
     A2(1:n-1,:) = A1(2:n,:);
     diff = A2-A1;
     grads = diff(:,d+1)./diff(:,j);
+    grads(isnan(grads)) = 0;
+    grads(isinf(grads)) = 0;
+    
     grad_dims(j) = mean(grads);
     %grad_dims(j) = nansum(grads)/size(grads,1);
 end
 gradient = mean(grad_dims);
+if isnan(gradient)
+    fprintf('%d, nan encountered\n',i);
+end
 end

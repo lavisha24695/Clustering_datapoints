@@ -10,14 +10,22 @@ filename = 'data_crescents.txt';
 %filename = 'sample_data.txt';
 %filename = 'data_set_1_8_1_gaussian.txt';
 fname = sprintf('rich%s.mat',filename);
-
-data = load(fname);
+load(fname)
+data = data_rich;
 no_properties = 15;
 T = 100;
+alpha = 0.1; %learning rate
 w = rand(no_properties,1);
 w = softmax(w);
 %For each dataset do the following
-n = size(data,1);
+N = size(data,1);
+D = size(data,2);
+%Normalize
+data2 = data;
+for d = 1:1:D
+   data2(:,d) = (data(:,d) - min(data(:,d)))/((max(data(:,d))- min(data(:,d))) 
+end
+
 
 %neighbors_criterion = 'Fixed_number';
 neighbors_criterion = 'Fixed_radius';
@@ -35,9 +43,10 @@ weights(1,:) = w';
 for iter = 1:1:T
     %Minimise energy to find yhat (n X 1)
     yhat = energy_minimisation(data, weights(iter,:),data_neighbors);
-    loss = sumsqr(yhat - y)/n;
+    loss = sumsqr(yhat - y)/N;
+    fprintf('Iteration: %d , loss: %d', iter, loss);
     %2. Compute weights w using grad-descent
-    derivative = compute_derivate(weights(iter,:), data, yhat, data_neighbors)
-    w = weights(iter,:) - derivative;
+    derivative = compute_derivate(weights(iter,:), data, y, yhat, data_neighbors);
+    w = weights(iter,:) - alpha*derivative;
     weights(iter+1,:) = softmax(w);
 end

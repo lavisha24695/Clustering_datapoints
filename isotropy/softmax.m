@@ -4,5 +4,5 @@ function weightsnew = softmax(weights)
     for i = 1:1:D
         sum1 = sum1 + exp(weights(i));
     end
-    weightsnew = weights./sum1;
+    weightsnew = exp(weights)./sum1;
 end

@@ -1,13 +1,7 @@
 %Author: Lavisha Aggarwal, derived from Sanketh Shetty's work
-
 %This function computes the new rich representation of the given data and
-%computes a 15(10) dimensional representation for 2D(ND) data where the
-%differnt components are 1.No of neighbors 2. mean distance between points
-%in nbhood 3. stddev of distance between pts in nbhood 4. shiftvector
-%density 6. 1st derivative density 7. 2nd derivative density 8.
-%isotropy(force sum) 9. isotropy(force sign) 10.
-%isotropy(uniformity)(11-15 only for 2 dimensional data) 11.
-%elongation 12.area 13. perimeter 14. eccentricity 15. gabriel measure
+%computes a 15(12) dimensional representation for 2D(ND) data where the
+%differnt components are 1.No of neighbors 2. mean distance between 
 clc;
 close all;
 clear all;

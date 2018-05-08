@@ -8,7 +8,7 @@ fprintf('Computing fixed radius neighborhoods around point\n');
 [ncentres, dimc] = size(data);
 %c = 0.1 worked best for main2
 %c = 0.5 might be working best for main3
-c = 0.5;
+c = 0.1;
 n2 = (ones(ncentres, 1) * sum((data.^2)', 1))' + ...
   ones(ndata, 1) * sum((data.^2)',1) - ...
   2.*(data*(data'));

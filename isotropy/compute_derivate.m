@@ -12,7 +12,7 @@ function derivative = compute_derivate(weight, data, y, yhat, data_neighbors)
             w(i,nbrs(j)) = exp(-1* sum(weight.*(data(i,:) - data(nbrs(j),:)).*(data(i,:) - data(nbrs(j),:))));
         end
     end
-    fprintf('Computed w\n');
+    fprintf('\nComputed w\n');
    %Computing thetai
    p = zeros(N,1);
    theta = zeros(N,1);
@@ -23,7 +23,7 @@ function derivative = compute_derivate(weight, data, y, yhat, data_neighbors)
    [pmin, mini] = min(p);
    a = maxi;
    b = mini;
-   fprintf('Pmax: %d, Pmin: %d\n',pmax, pmin);
+  % fprintf('Pmax: %d, Pmin: %d\n',pmax, pmin);
    for i = 1:1:N
        theta(i) = 0.5*(pmax + pmin - 2*p(i))/(pmax - pmin);
    end

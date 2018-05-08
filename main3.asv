@@ -26,12 +26,12 @@ neighbors_criterion = 'Fixed_radius';
 if strcmp(neighbors_criterion, 'Fixed_number')
     data_neighbors = precompute_nearest_neighbors(data, params.Kmax);
 else
-    [data_neighbors, nbr_radius] = precompute_neighbors_fixedradius(data_original);        
+    [data_neighbors, nbr_radius] = precompute_neighbors_fixedradius(data_originak);        
 end
-y_orig = data(:,10);%Uniformity isotropy is the 10th dimension
-meany = median(y_orig);
-%stdy = std(y_orig);
-stdy = 0;
+y_orig = data(:,1);%Uniformity isotropy is the 10th dimension
+meany = mean(y_orig);
+stdy = std(y_orig);
+
 y = y_orig > meany - stdy;
 weights = zeros(T+1,no_properties);
 weights(1,:) = w';

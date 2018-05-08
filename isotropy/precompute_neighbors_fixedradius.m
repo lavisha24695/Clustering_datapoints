@@ -24,7 +24,7 @@ data_neighbors = cell(ndata,1);
 for i=1:1:ndata
    data_neighbors{i} = find(dist(i,:)<nbr_radius & dist(i,:));
 end
-fprintf('Done\n');
+fprintf('Done finding neighbors\n');
 
 %{
 %Visualising the neighborhood around a point

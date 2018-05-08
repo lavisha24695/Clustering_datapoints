@@ -1,4 +1,4 @@
-function [elongation, area, perimeter] = compute_voronoiprops(data)
+function [elongation, area2, perimeter2] = compute_voronoiprops(data)
     
     n = size(data,1);
     d = size(data,2);
@@ -22,6 +22,15 @@ function [elongation, area, perimeter] = compute_voronoiprops(data)
         perim = perim + sqrt(sumsqr(len));
         elongation(i) = vol/(perim*perim);
         area(i) = vol;
+        area2 = area;
+        mean1 = mean(area);
+        std1 = std(area);
+        area2(find(area>mean1 + 2*std1)) = mean1 + 2*std1;
+        
         perimeter(i) = perim;
+        perimeter2 = perimeter;
+        mean1 = mean(perimeter);
+        std1 = std(perimeter);
+        perimeter2(find(perimeter>mean1 + 2*std1)) = mean1 + 2*std1;
      end
 end

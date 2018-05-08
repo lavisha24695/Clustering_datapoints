@@ -124,12 +124,12 @@ for d = 1:1:number_properties
 end
 fname = sprintf('rich%s.mat',filename);
 save(fname,'data','data_original');
-%{
+
 %Code to save images of the respective plots
 name1 = {'Number of Neighbors' ,'Mean Distance', 'Std Deviation Distance', 'Shiftvector Magnitude', 'Density',...
      '1st Derivative Density', '2nd Derivative Density', 'Isotropy Force Sum', 'Isotropy Force Sign', 'Isotropy Uniformity', 'Elongation',...
-     'Voronoi cell Area', 'Voronoi cell Perimeter', 'Eccentricity', 'Gabriel measure'};
-for i = 1:1:number_properties
+     'Log Voronoi cell Area', 'Log Voronoi cell Perimeter', 'Eccentricity', 'Log Gabriel measure'};
+for i = 1:1:15
     f = figure;
     scatter(data_original(:,1), data_original(:,2), 1, data(:,i))
     colorbar
@@ -137,7 +137,17 @@ for i = 1:1:number_properties
     title(name1{i})
     saveas(f, name2) 
 end
-%}
+index = [12,13,15];
+for j =1:1:3
+    i = index(j);
+    f = figure;
+    scatter(data_original(:,1), data_original(:,2), 1, log(data(:,i)))
+    colorbar
+    name2 = sprintf('%s.png',name1{i});
+    title(strcat(name1{i},'(saturated at Mean+2*Std.Dev.)'));
+    saveas(f, name2) 
+end
+
 %{
 %Estimate intrinsic dimensions of point neighborhoods
 data_dimensions = estimate_dimensionality(data,data_neighbors,params);

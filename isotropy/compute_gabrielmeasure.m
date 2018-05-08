@@ -1,4 +1,4 @@
-function gmeasure = compute_gabrielmeasure(data)
+function gmeasure2 = compute_gabrielmeasure(data)
 n = size(data,1);
 d = size(data,2);
 gmeasure = zeros(n,1);
@@ -77,7 +77,10 @@ for i = 1:1:n
     end
     gmeasure(i) = mean(gmeasures);
 end
-
+gmeasure2 = gmeasure;
+mean1 = mean(gmeasure);
+std1 = std(gmeasure);
+gmeasure2(find(gmeasure>mean1 + 2*std1)) = mean1 + 2*std1;
 
 %load(fname);
 end

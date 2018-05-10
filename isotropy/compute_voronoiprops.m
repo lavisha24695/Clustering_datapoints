@@ -26,11 +26,14 @@ function [elongation, area2, perimeter2] = compute_voronoiprops(data)
         mean1 = mean(area);
         std1 = std(area);
         area2(find(area>mean1 + 2*std1)) = mean1 + 2*std1;
+        area2 = log(area2);
         
         perimeter(i) = perim;
         perimeter2 = perimeter;
         mean1 = mean(perimeter);
         std1 = std(perimeter);
         perimeter2(find(perimeter>mean1 + 2*std1)) = mean1 + 2*std1;
+        %if(perimeter ==0)
+        perimeter2 = log(perimeter2);
      end
 end

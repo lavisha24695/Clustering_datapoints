@@ -14,13 +14,16 @@ clear all;
 addpath isotropy;
 addpath misc;
 addpath hierarchy;
-
+filename = 'Aggregation.txt'
 %filename = 'data_spiral.txt';
-filename = 'data_crescents.txt';
+%filename = 'data_crescents.txt';
 %filename = 'sample_data.txt';
 %filename = 'data_set_1_8_1_gaussian.txt';
 % Example data set:
+%filename = 'unbalance.txt';
 data = load(filename);
+data = data(:,1:2);
+scatter(data(:,1), data(:,2), 1,ones(size(data,1),1));
 % isotropy_criterion: specify the criterion to use when computing shift
 % vectors. Options:
 % 'force-sum' : Performs clustering using force-sum criterion
@@ -45,11 +48,6 @@ algorithm = 'connected-components';
 options.min_cluster_size = 20;
 options.merge_outliers = 1;
 
-%[pvals, data_neighbors, data_dimensions] ...
-%    = isotropy_clustering(data, criterion, win_size);
-%isotropy_clustering parameters
-% Change these for speedups. They do not have much of an effect on
-% clustering.
 params.Kmax = min(200, size(data,1)); % maximum window size for testing
 % Subspace estimation
 % options: 'MLE','Eigen','NearestNbr_dim','proj_L1','proj_L2',
@@ -135,16 +133,6 @@ for i = 1:1:15
     colorbar
     name2 = sprintf('%s.png',name1{i});
     title(name1{i})
-    saveas(f, name2) 
-end
-index = [12,13,15];
-for j =1:1:3
-    i = index(j);
-    f = figure;
-    scatter(data_original(:,1), data_original(:,2), 1, log(data(:,i)))
-    colorbar
-    name2 = sprintf('%s.png',name1{i});
-    title(strcat(name1{i},'(saturated at Mean+2*Std.Dev.)'));
     saveas(f, name2) 
 end
 

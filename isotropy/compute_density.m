@@ -3,13 +3,20 @@ function density = compute_density(i, data, data_nbrs, nbr_radius)
 %nbrs = data(data_nbrs,:);
 n = size(data_nbrs,2);
 d = size(data,2);
-volume = 1;
 constant = 1;
+if n<3
+    density = 0;
+else
+%{
+volume = 1;
+
 for i = 1:1:d
     volume = volume*nbr_radius;
 end
+%}
+[K, volume] = convhull(data(data_nbrs',:));
 density = constant*n/volume;
-
+end
 %The code below computes the median distance of the given point i from all
 %its neighbors
 %{

@@ -1,10 +1,10 @@
 clc;close all;clear all;
 addpath isotropy;addpath misc;addpath hierarchy;
 %filename = 'data_spiral.txt';
-%filename = 'data_crescents.txt';
+filename = 'data_crescents.txt';
 %filename = 'sample_data.txt';
 %filename = 'data_set_1_8_1_gaussian.txt';
-filename = 'Aggregation.txt'
+%filename = 'Aggregation.txt'
 fname = sprintf('rich%s.mat',filename);
 load(fname)
 %data is the normalized rich data, %data_rich is the unnormalized rich data
@@ -32,7 +32,7 @@ y = y > alpha;
 f = figure;
 scatter(data_original(:,1), data_original(:,2), 1,y);
 
-T = 100;
+T = 10;
 weights = zeros(T+1,no_properties);
 weights(1,:) = w';
 labels = zeros(T, N);
@@ -60,6 +60,11 @@ figure;
 plot(loss, 'r')
 hold on
 plot(flow, 'b')
+[q1, q2] = min(loss);
+isborder = labels(q2,:);
+isborder = logical(isborder');
+fname = sprintf('labels%s.mat',filename);
+save(fname,'isborder');
 %{
 %Visualising the neighbors in the high dimensional space
 for i = 1:1:N
